@@ -1,0 +1,22 @@
+{
+  "name": "simon-game_ci",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cinthiafontoura/simon-game_ci.git"
+  },
+  "author": "Cinthia Fontoura",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cinthiafontoura/simon-game_ci/issues"
+  },
+  "homepage": "https://github.com/cinthiafontoura/simon-game_ci#readme",
+  "devDependencies": {
+    "jest": "^29.2.0"
+  }
+}
