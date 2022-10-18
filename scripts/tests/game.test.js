@@ -2,7 +2,9 @@
  * @jest-environment jsdom
 */
 
-const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game")
+const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game")
+
+jest.spyOn(window, "alert").mockImplementation(() => { })
 
 // Setup the DOM before run tests
 beforeAll(() => {
@@ -31,6 +33,12 @@ describe("game object constains correct keys", () => {
   })
   test("choices contain the correct ids", () => {
     expect(game.choices).toEqual(["button1", "button2", "button3", "button4"])
+  })
+  test("lastButton key exists", () => {
+    expect("lastButton" in game).toBe(true)
+  })
+  test("turnInProgress key exists", () => {
+    expect("turnInProgress" in game).toBe(true)
   })
 })
 
@@ -68,24 +76,44 @@ describe("gamePlayer works correctly", () => {
     game.currentGame = []
     game.playerMoves = []
     addTurn()
-  }) 
+  })
   afterEach(() => {
     game.score = 0
     game.currentGame = []
     game.playerMoves = []
   })
-  test("addTurn adds a new turn to the game", () => {
+  test("AddTurn adds a new turn to the game", () => {
     addTurn()
     expect(game.currentGame.length).toBe(2)
   })
-  test("should add the correct class to light up the buttons", () => {
+  test("Should add the correct class to light up the buttons", () => {
     let button = document.getElementById(game.currentGame[0])
     lightsOn(game.currentGame[0])
     expect(button.classList).toContain("light")
   })
-  test("showTurns should update game.turnNumber", () => {
+  test("ShowTurns should update game.turnNumber", () => {
     game.turnNumber = 42
     showTurns()
     expect(game.turnNumber).toBe(0)
+  })
+  test("Should increment the score if the turn is correct", () => {
+    game.playerMoves.push(game.currentGame[0])
+    playerTurn()
+    expect(game.score).toBe(1)
+  })
+  test("Should call an alert if the move is wrong", () => {
+    game.playerMoves.push("wrong")
+    playerTurn()
+    expect(window.alert).toBeCalledWith("Wrong move!")
+  })
+  test("Should toggle turnInProgress to true", () => {
+    showTurns()
+    expect(game.turnInProgress).toBe(true)
+  })
+  test("Clicking during the computer sequence should fail", () => {
+    showTurns()
+    game.lastButton = ""
+    document.getElementById("button2").click()
+    expect(game.lastButton).toEqual("")
   })
 })
